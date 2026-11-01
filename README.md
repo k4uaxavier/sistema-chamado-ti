@@ -59,14 +59,16 @@ Até o momento, foram implementadas as seguintes partes:
 
 ### Repositórios
 
-Foram desenvolvidas duas classes para armazenamento de dados em memória, utilizando dicionários Python:
+Foram desenvolvidas duas classes para armazenamento de dados em memória, utilizando dicionários Python.
 
 **RepositorioChamados**
+
 - Salvar chamados com geração automática de identificadores.
 - Buscar chamados pelo ID.
 - Listar todos os chamados cadastrados.
 
 **RepositorioUsuarios**
+
 - Salvar usuários com geração automática de identificadores.
 - Buscar usuários pelo ID.
 - Listar todos os usuários cadastrados.
@@ -79,17 +81,26 @@ O arquivo `main.py` foi organizado como ponto de entrada da aplicação, apresen
 
 Foram criados testes utilizando a biblioteca `unittest`, com o objetivo de verificar o funcionamento das classes e a integração entre os componentes.
 
-Até o momento, foram implementados:
+### Testes da classe Chamado
 
-- Teste unitário para verificar se um chamado inicia com o status ABERTO.
-- Teste unitário para verificar se uma descrição vazia gera uma exceção.
-- Teste de integração para verificar o salvamento e a recuperação de um chamado pelo repositório.
+- Verificar se um chamado inicia com o status ABERTO.
+- Verificar se uma descrição vazia gera uma exceção.
 
-**Resultado atual:** 3 testes executados com sucesso.
+### Testes da classe RepositorioChamados
+
+- Verificar o salvamento e a recuperação de um chamado pelo repositório.
+
+### Testes da classe RepositorioUsuarios
+
+- Verificar o salvamento de usuários.
+- Verificar a busca de usuários pelo identificador.
+- Verificar a listagem dos usuários cadastrados.
+
+**Resultado atual:** 6 testes executados com sucesso.
 
 ### Como executar os testes
 
-Para executar todos os testes, utilize o comando:
+Para executar todos os testes automatizados, utilize o comando:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -147,15 +158,6 @@ O projeto utiliza Git e GitHub para controle de versão e colaboração entre os
 
 O desenvolvimento é organizado por meio de branches, permitindo que cada integrante trabalhe em partes específicas do sistema antes da integração à branch principal (`main`).
 
-### Ampliação dos testes automatizados
-
-Foram adicionados três novos testes para a classe `RepositorioUsuarios`, verificando:
-
-- O salvamento de usuários.
-- A busca de usuários pelo identificador.
-- A listagem dos usuários cadastrados.
-
-Após a implementação, foram executados todos os testes automatizados do projeto, totalizando seis testes aprovados.
 ---
 
 **Projeto acadêmico — Sistemas de Informação.**
