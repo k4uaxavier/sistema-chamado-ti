@@ -147,6 +147,15 @@ O projeto utiliza Git e GitHub para controle de versão e colaboração entre os
 
 O desenvolvimento é organizado por meio de branches, permitindo que cada integrante trabalhe em partes específicas do sistema antes da integração à branch principal (`main`).
 
+### Ampliação dos testes automatizados
+
+Foram adicionados três novos testes para a classe `RepositorioUsuarios`, verificando:
+
+- O salvamento de usuários.
+- A busca de usuários pelo identificador.
+- A listagem dos usuários cadastrados.
+
+Após a implementação, foram executados todos os testes automatizados do projeto, totalizando seis testes aprovados.
 ---
 
 **Projeto acadêmico — Sistemas de Informação.**
