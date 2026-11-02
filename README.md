@@ -22,7 +22,8 @@ O sistema prevê diferentes tipos de usuários, como solicitantes, técnicos e a
 sistema-chamado-ti/
 │
 ├── aplicacao/
-│   └── __init__.py
+│   ├── __init__.py
+│   └── chamado_service.py
 │
 ├── dominio/
 │   ├── __init__.py
@@ -39,7 +40,8 @@ sistema-chamado-ti/
 ├── tests/
 │   ├── __init__.py
 │   ├── test_chamado.py
-│   └── test_repositorios.py
+│   ├── test_repositorios.py
+│   └── test_chamado_service.py
 │
 ├── main.py
 ├── README.md
@@ -73,6 +75,18 @@ Foram desenvolvidas duas classes para armazenamento de dados em memória, utiliz
 - Buscar usuários pelo ID.
 - Listar todos os usuários cadastrados.
 
+### Serviços da aplicação
+
+Foi implementado o `ChamadoService`, responsável pela lógica de abertura de chamados.
+
+Suas responsabilidades incluem:
+
+- Buscar o usuário solicitante pelo identificador.
+- Verificar se o usuário existe.
+- Criar um novo chamado.
+- Validar as informações do chamado.
+- Salvar o chamado no repositório correspondente.
+
 ### Inicialização do sistema
 
 O arquivo `main.py` foi organizado como ponto de entrada da aplicação, apresentando uma mensagem de inicialização do sistema.
@@ -96,7 +110,13 @@ Foram criados testes utilizando a biblioteca `unittest`, com o objetivo de verif
 - Verificar a busca de usuários pelo identificador.
 - Verificar a listagem dos usuários cadastrados.
 
-**Resultado atual:** 6 testes executados com sucesso.
+### Testes da classe ChamadoService
+
+- Verificar a abertura de um chamado com sucesso.
+- Verificar se o sistema impede a abertura de chamados para usuários inexistentes.
+- Verificar se uma descrição vazia gera uma exceção durante a abertura do chamado.
+
+**Resultado atual:** 9 testes executados com sucesso.
 
 ### Como executar os testes
 
@@ -143,14 +163,15 @@ Isso significa que os registros são mantidos somente enquanto o programa está 
 
 O projeto continuará sendo desenvolvido gradualmente. As próximas etapas previstas são:
 
-- Implementação dos serviços da aplicação.
+- Implementação do `UsuarioService`.
 - Desenvolvimento da interface de terminal.
-- Abertura e listagem de chamados.
+- Integração dos serviços com a interface.
+- Abertura e listagem de chamados pela interface.
 - Atribuição de técnicos aos chamados.
 - Atualização dos status.
 - Encerramento de chamados com registro da solução.
 - Ampliação dos testes automatizados.
-- Melhorias na documentação e organização do código.
+- Revisão e integração final do projeto.
 
 ## 9. Desenvolvimento em equipe
 
