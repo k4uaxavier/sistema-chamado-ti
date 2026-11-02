@@ -1,65 +1,32 @@
-# primeiro teste: criação de chamado 
-"""
-from dominio.usuario import Usuario
-from dominio.chamado import Chamado
 
-usuario = Usuario(1, "João", "joao@email.com")
+from aplicacao.usuario_service import UsuarioService
+from aplicacao.chamado_service import ChamadoService
 
-chamado = Chamado(
-    "Computador não está ligando",
-    usuario
-)
-
-chamado.validar()
-
-print("Chamado criado com sucesso!")
-print("Solicitante:", chamado.solicitante.nome)
-print("Descrição:", chamado.descricao)
-print("Status:", chamado.status.value)
-"""
-# segundo teste: repositório de chamados
-"""
-from dominio.usuario import Usuario
-from dominio.chamado import Chamado
+from infraestrutura.repositorio_usuarios import RepositorioUsuarios
 from infraestrutura.repositorio_chamados import RepositorioChamados
 
-usuario = Usuario(1, "João", "joao@email.com")
+from interface.terminal_cli import TerminalCLI
 
-chamado = Chamado("Computador não liga", usuario)
 
-repositorio = RepositorioChamados()
+def main():
 
-repositorio.salvar(chamado)
+    repositorio_usuarios = RepositorioUsuarios()
+    repositorio_chamados = RepositorioChamados()
 
-print("ID:", chamado.id)
-print("Chamado:", repositorio.buscar_por_id(1).descricao)
+    usuario_service = UsuarioService(repositorio_usuarios)
 
-print("Todos os chamados:")
-for item in repositorio.listar_todos():
-    print(item.id, item.descricao)
-"""
-# terceiro teste: repositório de usuários
-from dominio.usuario import Usuario
-from infraestrutura.repositorio_usuarios import RepositorioUsuarios
+    chamado_service = ChamadoService(
+        repositorio_chamados,
+        repositorio_usuarios
+    )
 
-repositorio = RepositorioUsuarios()
+    terminal = TerminalCLI(
+        usuario_service,
+        chamado_service
+    )
 
-usuario1 = Usuario(None, "João", "joao@email.com")
-usuario2 = Usuario(None, "Maria", "maria@email.com")
+    terminal.executar()
 
-repositorio.salvar(usuario1)
-repositorio.salvar(usuario2)
 
-print("Usuários cadastrados:")
-
-for usuario in repositorio.listar_todos():
-    print(usuario.id, usuario.nome, usuario.email)
-
-print("\nBuscando usuário pelo ID:")
-
-usuario = repositorio.buscar_por_id(1)
-
-if usuario:
-    print(usuario.nome)
-else:
-    print("Usuário não encontrado.")
+if __name__ == "__main__":
+    main()
