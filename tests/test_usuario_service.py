@@ -3,14 +3,15 @@ import unittest
 
 from aplicacao.usuario_service import UsuarioService
 from infraestrutura.repositorio_usuarios import RepositorioUsuarios
+from dominio.tecnico import Tecnico
 
-# A classe TestUsuarioService é uma subclasse de unittest.TestCase, que fornece métodos para criar e executar testes unitários para a classe UsuarioService.
+
 class TestUsuarioService(unittest.TestCase):
-# O método setUp é chamado antes de cada teste e é usado para configurar o ambiente de teste, criando instâncias do repositório de usuários e do serviço UsuarioService.
+
     def setUp(self):
         self.repositorio = RepositorioUsuarios()
         self.service = UsuarioService(self.repositorio)
-# O método test_cadastrar_usuario é um teste unitário que verifica se o cadastro de um usuário funciona corretamente, validando se o usuário foi criado com sucesso e possui os atributos esperados.
+
     def test_cadastrar_usuario(self):
         usuario = self.service.cadastrar_usuario(
             "João",
@@ -38,6 +39,52 @@ class TestUsuarioService(unittest.TestCase):
         resultado = self.service.listar_usuarios()
 
         self.assertEqual(len(resultado), 2)
+
+    def test_cadastrar_tecnico(self):
+        tecnico = self.service.cadastrar_tecnico(
+            "Carlos",
+            "carlos@email.com",
+            "Redes"
+        )
+
+        self.assertIsInstance(tecnico, Tecnico)
+        self.assertEqual(tecnico.id, 1)
+        self.assertEqual(tecnico.nome, "Carlos")
+        self.assertEqual(tecnico.especialidade, "Redes")
+
+    def test_listar_tecnicos(self):
+        self.service.cadastrar_tecnico(
+            "Carlos",
+            "carlos@email.com",
+            "Redes"
+        )
+
+        self.service.cadastrar_tecnico(
+            "Ana",
+            "ana@email.com",
+            "Hardware"
+        )
+
+        resultado = self.service.listar_tecnicos()
+
+        self.assertEqual(len(resultado), 2)
+
+    def test_listar_usuarios_nao_inclui_tecnicos(self):
+        self.service.cadastrar_usuario(
+            "João",
+            "joao@email.com"
+        )
+
+        self.service.cadastrar_tecnico(
+            "Carlos",
+            "carlos@email.com",
+            "Redes"
+        )
+
+        resultado = self.service.listar_usuarios()
+
+        self.assertEqual(len(resultado), 1)
+        self.assertEqual(resultado[0].nome, "João")
 
 
 if __name__ == "__main__":

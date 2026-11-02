@@ -4,9 +4,9 @@
 
 O Sistema de Gerenciamento de Chamados de TI é um projeto acadêmico desenvolvido com o objetivo de facilitar a abertura, o acompanhamento e o gerenciamento de solicitações de suporte técnico.
 
-A proposta é centralizar os chamados de TI em um único sistema, permitindo que usuários registrem problemas e que a equipe técnica possa acompanhar e realizar o atendimento.
+A proposta é centralizar os chamados de TI em um único sistema, permitindo que usuários registrem problemas e que técnicos sejam responsáveis pelo atendimento e pela resolução dessas solicitações.
 
-O projeto está sendo desenvolvido utilizando conceitos de Programação Orientada a Objetos (POO), organização em camadas e testes automatizados.
+O projeto utiliza conceitos de Programação Orientada a Objetos (POO), organização em camadas, regras de negócio e testes automatizados.
 
 ## 2. Tecnologias utilizadas
 
@@ -31,6 +31,7 @@ sistema-chamado-ti/
 ├── dominio/
 │   ├── __init__.py
 │   ├── usuario.py
+│   ├── tecnico.py
 │   ├── chamado.py
 │   ├── status_chamado.py
 │   └── excecoes.py
@@ -40,12 +41,17 @@ sistema-chamado-ti/
 │   ├── repositorio_chamados.py
 │   └── repositorio_usuarios.py
 │
+├── interface/
+│   ├── __init__.py
+│   └── terminal_cli.py
+│
 ├── tests/
 │   ├── __init__.py
 │   ├── test_chamado.py
 │   ├── test_repositorios.py
-│   ├── test_chamado_service.py
-│   └── test_usuario_service.py
+│   ├── test_tecnico.py
+│   ├── test_usuario_service.py
+│   └── test_chamado_service.py
 │
 ├── main.py
 ├── README.md
@@ -60,9 +66,10 @@ O sistema está organizado em camadas, separando as responsabilidades de cada pa
 
 Contém as classes e regras principais do sistema.
 
-- **Usuario:** representa o usuário que solicita suporte.
+- **Usuario:** representa o usuário que solicita suporte técnico.
+- **Tecnico:** representa o profissional responsável pelo atendimento, herdando características da classe Usuario.
 - **Chamado:** representa uma solicitação de atendimento técnico.
-- **StatusChamado:** define os possíveis estados de um chamado.
+- **StatusChamado:** define os estados possíveis de um chamado.
 - **Excecoes:** contém exceções personalizadas utilizadas pelo sistema.
 
 ### Aplicação
@@ -71,14 +78,19 @@ Contém os serviços responsáveis por executar as operações do sistema.
 
 **ChamadoService:**
 - Abrir novos chamados.
-- Verificar se o usuário solicitante existe.
+- Verificar a existência do usuário solicitante.
 - Validar os dados do chamado.
-- Salvar o chamado no repositório.
+- Atribuir técnicos aos chamados.
+- Listar chamados.
+- Atualizar o status dos chamados.
+- Encerrar chamados com registro da solução.
 
 **UsuarioService:**
-- Cadastrar novos usuários.
+- Cadastrar usuários.
 - Buscar usuários pelo ID.
-- Listar todos os usuários cadastrados.
+- Listar usuários cadastrados.
+- Cadastrar técnicos.
+- Listar técnicos cadastrados.
 
 ### Infraestrutura
 
@@ -90,44 +102,71 @@ Responsável pelo armazenamento e recuperação dos dados.
 - Listar todos os chamados.
 
 **RepositorioUsuarios:**
-- Salvar usuários.
-- Buscar usuários pelo ID.
-- Listar todos os usuários.
+- Salvar usuários e técnicos.
+- Buscar registros pelo ID.
+- Listar os registros armazenados.
 
 Atualmente, os dados são armazenados em memória, utilizando estruturas de dados do Python.
 
+### Interface
+
+Responsável pela interação entre o usuário e o sistema por meio do terminal.
+
+**TerminalCLI:**
+- Exibir o menu principal.
+- Cadastrar e listar usuários.
+- Cadastrar e listar técnicos.
+- Abrir e listar chamados.
+- Atribuir técnicos aos chamados.
+- Iniciar atendimentos.
+- Encerrar chamados.
+
 ## 5. Funcionalidades implementadas
 
-Até o momento, foram desenvolvidas as seguintes funcionalidades:
+O sistema possui as seguintes funcionalidades:
 
-- Criação e validação de chamados.
-- Definição automática do status inicial como "Aberto".
 - Cadastro de usuários.
-- Busca de usuários pelo ID.
-- Listagem de usuários cadastrados.
-- Armazenamento de chamados em memória.
-- Armazenamento de usuários em memória.
-- Abertura de chamados por meio do serviço da aplicação.
-- Verificação da existência do usuário solicitante antes da abertura de um chamado.
-- Tratamento de erros relacionados a operações inválidas.
+- Cadastro de técnicos com especialidade.
+- Listagem de usuários e técnicos separadamente.
+- Abertura de chamados vinculados a um usuário solicitante.
+- Validação da descrição e do solicitante.
+- Definição automática do status inicial como **Aberto**.
+- Atribuição de técnicos aos chamados.
+- Início do atendimento após a atribuição de um técnico.
+- Atualização do status para **Em atendimento**.
+- Encerramento de chamados com registro obrigatório da solução.
+- Impedimento de alterações em chamados encerrados.
+- Listagem de chamados com informações sobre solicitante, técnico, status e solução.
 
-O arquivo `main.py` possui atualmente uma estrutura inicial de execução do sistema.
+### Regras de negócio
+
+O sistema respeita as seguintes regras:
+
+- Todo chamado deve possuir uma descrição e um usuário solicitante.
+- Todo chamado começa com o status **Aberto**.
+- Um técnico deve ser atribuído antes do início do atendimento.
+- O fluxo de status segue a sequência **Aberto → Em atendimento → Encerrado**.
+- Um chamado encerrado não pode ter seu status alterado.
+- O encerramento exige o registro de uma solução.
 
 ## 6. Testes automatizados
 
-O projeto utiliza a biblioteca `unittest` do Python para verificar o funcionamento das classes e operações implementadas.
+O projeto utiliza a biblioteca `unittest` do Python para verificar o funcionamento das classes, serviços e regras de negócio.
 
-Atualmente, existem **12 testes automatizados**, distribuídos da seguinte forma:
+Atualmente, existem **30 testes automatizados**, distribuídos da seguinte forma:
 
-- **Chamado:** 2 testes.
-- **RepositorioChamados:** 1 teste.
-- **RepositorioUsuarios:** 3 testes.
-- **ChamadoService:** 3 testes.
-- **UsuarioService:** 3 testes.
+| Arquivo de testes | Quantidade |
+|---|---:|
+| test_chamado.py | 11 |
+| test_chamado_service.py | 6 |
+| test_repositorios.py | 4 |
+| test_tecnico.py | 3 |
+| test_usuario_service.py | 6 |
+| **Total** | **30** |
 
-Todos os 12 testes foram executados com sucesso.
+Todos os 30 testes foram executados com sucesso na última execução.
 
-Para executar os testes, utilize o comando:
+Para executar os testes, utilize:
 
 ```bash
 python -m unittest discover -s tests -v
@@ -161,6 +200,8 @@ cd sistema-chamado-ti
 python main.py
 ```
 
+4. Utilize as opções apresentadas no menu para cadastrar usuários, cadastrar técnicos e gerenciar chamados.
+
 ### Executando os testes
 
 Para executar todos os testes automatizados:
@@ -169,24 +210,15 @@ Para executar todos os testes automatizados:
 python -m unittest discover -s tests -v
 ```
 
-## 8. Próximas etapas
+## 8. Observações
 
-O projeto continua em desenvolvimento. As próximas etapas incluem:
-
-- Desenvolver a interface de interação pelo terminal.
-- Integrar os serviços à interface do sistema.
-- Implementar a listagem e consulta de chamados.
-- Implementar a atribuição de chamados aos técnicos.
-- Implementar a atualização dos status dos chamados.
-- Implementar o encerramento de chamados com registro da solução.
-- Ampliar os testes automatizados.
-- Realizar a revisão geral do sistema.
+O projeto utiliza armazenamento em memória. Portanto, os dados cadastrados são mantidos somente enquanto o programa estiver em execução. Ao encerrar o sistema, os registros são perdidos.
 
 ## 9. Desenvolvimento e controle de versão
 
 O projeto utiliza Git e GitHub para controle de versão e acompanhamento do desenvolvimento.
 
-As funcionalidades são desenvolvidas em branches específicas, permitindo organizar as alterações e manter a branch principal (`main`) mais estável.
+As funcionalidades foram organizadas em branches específicas, permitindo acompanhar as alterações e manter a branch principal (`main`) mais estável.
 
 **Repositório:** https://github.com/k4uaxavier/sistema-chamado-ti
 

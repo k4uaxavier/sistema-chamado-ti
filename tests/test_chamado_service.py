@@ -1,19 +1,26 @@
-# Chamado Service
+
+# Testes do ChamadoService
+
 import unittest
-#o módulo unittest é importado para permitir a criação e execução de testes unitários.
+
 from aplicacao.chamado_service import ChamadoService
+
 from dominio.usuario import Usuario
+from dominio.tecnico import Tecnico
 from dominio.status_chamado import StatusChamado
+
 from dominio.excecoes import (
     OperacaoInvalidaError,
     ChamadoInvalidoError
 )
+
 from infraestrutura.repositorio_chamados import RepositorioChamados
 from infraestrutura.repositorio_usuarios import RepositorioUsuarios
 
-#classe TestChamadoService é uma subclasse de unittest.TestCase, que fornece métodos para criar e executar testes unitários para a classe ChamadoService.
+
 class TestChamadoService(unittest.TestCase):
-#o método setUp é chamado antes de cada teste e é usado para configurar o ambiente de teste, criando instâncias dos repositórios e do serviço ChamadoService, além de criar um usuário de teste.
+
+    # Configura os objetos necessários antes de cada teste.
     def setUp(self):
         self.repositorio_chamados = RepositorioChamados()
         self.repositorio_usuarios = RepositorioUsuarios()
@@ -25,7 +32,8 @@ class TestChamadoService(unittest.TestCase):
             self.repositorio_chamados,
             self.repositorio_usuarios
         )
-#o método test_abrir_chamado_com_sucesso é um teste unitário que verifica se a abertura de um chamado com um usuário existente e uma descrição válida funciona corretamente, validando se o chamado foi criado com sucesso e possui os atributos esperados.
+
+    # Verifica se um chamado pode ser aberto com sucesso.
     def test_abrir_chamado_com_sucesso(self):
         chamado = self.service.abrir_chamado(
             self.usuario.id,
@@ -36,6 +44,7 @@ class TestChamadoService(unittest.TestCase):
         self.assertEqual(chamado.descricao, "Computador não liga")
         self.assertEqual(chamado.status, StatusChamado.ABERTO)
 
+    # Verifica se a abertura falha quando o usuário não existe.
     def test_abrir_chamado_com_usuario_inexistente(self):
         with self.assertRaises(OperacaoInvalidaError):
             self.service.abrir_chamado(
@@ -43,6 +52,7 @@ class TestChamadoService(unittest.TestCase):
                 "Computador não liga"
             )
 
+    # Verifica se uma descrição vazia gera uma exceção.
     def test_abrir_chamado_com_descricao_vazia(self):
         with self.assertRaises(ChamadoInvalidoError):
             self.service.abrir_chamado(
@@ -50,6 +60,86 @@ class TestChamadoService(unittest.TestCase):
                 "   "
             )
 
-#logica de negócios para abrir um chamado, incluindo a validação do usuário e a criação do objeto Chamado.
+    # Verifica se o serviço consegue atribuir um técnico ao chamado.
+    def test_atribuir_tecnico_ao_chamado(self):
+        chamado = self.service.abrir_chamado(
+            self.usuario.id,
+            "Computador não liga"
+        )
+
+        tecnico = Tecnico(
+            None,
+            "Carlos",
+            "carlos@email.com",
+            "Suporte de Hardware"
+        )
+
+        self.service.atribuir_tecnico(chamado, tecnico)
+
+        self.assertEqual(chamado.tecnico, tecnico)
+
+    # Verifica se o serviço consegue atualizar o status do chamado.
+    def test_atualizar_status_para_em_atendimento(self):
+        chamado = self.service.abrir_chamado(
+            self.usuario.id,
+            "Computador não liga"
+        )
+
+        tecnico = Tecnico(
+            None,
+            "Carlos",
+            "carlos@email.com",
+            "Suporte de Hardware"
+        )
+
+        self.service.atribuir_tecnico(chamado, tecnico)
+
+        self.service.atualizar_status(
+            chamado,
+            StatusChamado.EM_ATENDIMENTO
+        )
+
+        self.assertEqual(
+            chamado.status,
+            StatusChamado.EM_ATENDIMENTO
+        )
+
+    # Verifica se o serviço consegue encerrar um chamado com solução.
+    def test_encerrar_chamado_com_sucesso(self):
+        chamado = self.service.abrir_chamado(
+            self.usuario.id,
+            "Computador não liga"
+        )
+
+        tecnico = Tecnico(
+            None,
+            "Carlos",
+            "carlos@email.com",
+            "Suporte de Hardware"
+        )
+
+        self.service.atribuir_tecnico(chamado, tecnico)
+
+        self.service.atualizar_status(
+            chamado,
+            StatusChamado.EM_ATENDIMENTO
+        )
+
+        self.service.encerrar_chamado(
+            chamado,
+            "Fonte do computador substituída."
+        )
+
+        self.assertEqual(
+            chamado.status,
+            StatusChamado.ENCERRADO
+        )
+
+        self.assertEqual(
+            chamado.solucao,
+            "Fonte do computador substituída."
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
