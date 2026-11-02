@@ -2,28 +2,31 @@
 
 ## 1. Sobre o projeto
 
-O Sistema de Gerenciamento de Chamados de TI é um projeto acadêmico desenvolvido na disciplina de Programação Orientada a Objetos.
+O Sistema de Gerenciamento de Chamados de TI é um projeto acadêmico desenvolvido com o objetivo de facilitar a abertura, o acompanhamento e o gerenciamento de solicitações de suporte técnico.
 
-O objetivo é desenvolver uma aplicação que permita centralizar e organizar solicitações de suporte técnico, facilitando o registro, acompanhamento e gerenciamento de chamados de TI.
+A proposta é centralizar os chamados de TI em um único sistema, permitindo que usuários registrem problemas e que a equipe técnica possa acompanhar e realizar o atendimento.
 
-O sistema prevê diferentes tipos de usuários, como solicitantes, técnicos e administradores.
+O projeto está sendo desenvolvido utilizando conceitos de Programação Orientada a Objetos (POO), organização em camadas e testes automatizados.
 
 ## 2. Tecnologias utilizadas
 
-- **Linguagem:** Python
-- **Paradigma:** Programação Orientada a Objetos (POO)
-- **Editor de código:** Visual Studio Code
-- **Controle de versão:** Git e GitHub
-- **Testes automatizados:** unittest
+- **Python:** linguagem de programação utilizada no desenvolvimento.
+- **Programação Orientada a Objetos (POO):** organização do sistema em classes e objetos.
+- **Visual Studio Code:** ambiente de desenvolvimento.
+- **Git e GitHub:** controle de versão e armazenamento do código.
+- **Unittest:** biblioteca utilizada para os testes automatizados.
 
 ## 3. Estrutura do projeto
+
+O projeto está organizado da seguinte maneira:
 
 ```text
 sistema-chamado-ti/
 │
 ├── aplicacao/
 │   ├── __init__.py
-│   └── chamado_service.py
+│   ├── chamado_service.py
+│   └── usuario_service.py
 │
 ├── dominio/
 │   ├── __init__.py
@@ -41,99 +44,104 @@ sistema-chamado-ti/
 │   ├── __init__.py
 │   ├── test_chamado.py
 │   ├── test_repositorios.py
-│   └── test_chamado_service.py
+│   ├── test_chamado_service.py
+│   └── test_usuario_service.py
 │
 ├── main.py
 ├── README.md
 └── .gitignore
 ```
 
-## 4. Funcionalidades desenvolvidas
+## 4. Organização do sistema
 
-Até o momento, foram implementadas as seguintes partes:
+O sistema está organizado em camadas, separando as responsabilidades de cada parte do projeto.
 
-### Classes do domínio
+### Domínio
 
-- **Usuario:** representa o usuário solicitante, contendo identificador, nome e e-mail.
-- **Chamado:** representa uma solicitação de suporte técnico, contendo descrição, status, data de abertura, solução e solicitante.
-- **StatusChamado:** define os estados possíveis de um chamado: ABERTO, EM_ATENDIMENTO e ENCERRADO.
-- **Exceções personalizadas:** utilizadas para tratar situações inválidas durante as operações do sistema.
+Contém as classes e regras principais do sistema.
 
-### Repositórios
+- **Usuario:** representa o usuário que solicita suporte.
+- **Chamado:** representa uma solicitação de atendimento técnico.
+- **StatusChamado:** define os possíveis estados de um chamado.
+- **Excecoes:** contém exceções personalizadas utilizadas pelo sistema.
 
-Foram desenvolvidas duas classes para armazenamento de dados em memória, utilizando dicionários Python.
+### Aplicação
 
-**RepositorioChamados**
+Contém os serviços responsáveis por executar as operações do sistema.
 
-- Salvar chamados com geração automática de identificadores.
-- Buscar chamados pelo ID.
-- Listar todos os chamados cadastrados.
+**ChamadoService:**
+- Abrir novos chamados.
+- Verificar se o usuário solicitante existe.
+- Validar os dados do chamado.
+- Salvar o chamado no repositório.
 
-**RepositorioUsuarios**
-
-- Salvar usuários com geração automática de identificadores.
+**UsuarioService:**
+- Cadastrar novos usuários.
 - Buscar usuários pelo ID.
 - Listar todos os usuários cadastrados.
 
-### Serviços da aplicação
+### Infraestrutura
 
-Foi implementado o `ChamadoService`, responsável pela lógica de abertura de chamados.
+Responsável pelo armazenamento e recuperação dos dados.
 
-Suas responsabilidades incluem:
+**RepositorioChamados:**
+- Salvar chamados.
+- Buscar chamados pelo ID.
+- Listar todos os chamados.
 
-- Buscar o usuário solicitante pelo identificador.
-- Verificar se o usuário existe.
-- Criar um novo chamado.
-- Validar as informações do chamado.
-- Salvar o chamado no repositório correspondente.
+**RepositorioUsuarios:**
+- Salvar usuários.
+- Buscar usuários pelo ID.
+- Listar todos os usuários.
 
-### Inicialização do sistema
+Atualmente, os dados são armazenados em memória, utilizando estruturas de dados do Python.
 
-O arquivo `main.py` foi organizado como ponto de entrada da aplicação, apresentando uma mensagem de inicialização do sistema.
+## 5. Funcionalidades implementadas
 
-## 5. Testes automatizados
+Até o momento, foram desenvolvidas as seguintes funcionalidades:
 
-Foram criados testes utilizando a biblioteca `unittest`, com o objetivo de verificar o funcionamento das classes e a integração entre os componentes.
+- Criação e validação de chamados.
+- Definição automática do status inicial como "Aberto".
+- Cadastro de usuários.
+- Busca de usuários pelo ID.
+- Listagem de usuários cadastrados.
+- Armazenamento de chamados em memória.
+- Armazenamento de usuários em memória.
+- Abertura de chamados por meio do serviço da aplicação.
+- Verificação da existência do usuário solicitante antes da abertura de um chamado.
+- Tratamento de erros relacionados a operações inválidas.
 
-### Testes da classe Chamado
+O arquivo `main.py` possui atualmente uma estrutura inicial de execução do sistema.
 
-- Verificar se um chamado inicia com o status ABERTO.
-- Verificar se uma descrição vazia gera uma exceção.
+## 6. Testes automatizados
 
-### Testes da classe RepositorioChamados
+O projeto utiliza a biblioteca `unittest` do Python para verificar o funcionamento das classes e operações implementadas.
 
-- Verificar o salvamento e a recuperação de um chamado pelo repositório.
+Atualmente, existem **12 testes automatizados**, distribuídos da seguinte forma:
 
-### Testes da classe RepositorioUsuarios
+- **Chamado:** 2 testes.
+- **RepositorioChamados:** 1 teste.
+- **RepositorioUsuarios:** 3 testes.
+- **ChamadoService:** 3 testes.
+- **UsuarioService:** 3 testes.
 
-- Verificar o salvamento de usuários.
-- Verificar a busca de usuários pelo identificador.
-- Verificar a listagem dos usuários cadastrados.
+Todos os 12 testes foram executados com sucesso.
 
-### Testes da classe ChamadoService
-
-- Verificar a abertura de um chamado com sucesso.
-- Verificar se o sistema impede a abertura de chamados para usuários inexistentes.
-- Verificar se uma descrição vazia gera uma exceção durante a abertura do chamado.
-
-**Resultado atual:** 9 testes executados com sucesso.
-
-### Como executar os testes
-
-Para executar todos os testes automatizados, utilize o comando:
+Para executar os testes, utilize o comando:
 
 ```bash
 python -m unittest discover -s tests -v
 ```
 
-## 6. Como executar o projeto
+## 7. Como executar o projeto
 
 ### Pré-requisitos
 
 - Python instalado.
-- Visual Studio Code (recomendado).
+- Visual Studio Code ou outro editor de código.
+- Git instalado (opcional para execução local).
 
-### Execução
+### Executando o sistema
 
 1. Clone o repositório:
 
@@ -147,38 +155,41 @@ git clone https://github.com/k4uaxavier/sistema-chamado-ti.git
 cd sistema-chamado-ti
 ```
 
-3. Execute o programa:
+3. Execute o sistema:
 
 ```bash
 python main.py
 ```
 
-## 7. Armazenamento de dados
+### Executando os testes
 
-Nesta etapa do desenvolvimento, os dados são armazenados temporariamente em dicionários Python.
+Para executar todos os testes automatizados:
 
-Isso significa que os registros são mantidos somente enquanto o programa está em execução. A persistência em banco de dados não foi implementada até o momento.
+```bash
+python -m unittest discover -s tests -v
+```
 
 ## 8. Próximas etapas
 
-O projeto continuará sendo desenvolvido gradualmente. As próximas etapas previstas são:
+O projeto continua em desenvolvimento. As próximas etapas incluem:
 
-- Implementação do `UsuarioService`.
-- Desenvolvimento da interface de terminal.
-- Integração dos serviços com a interface.
-- Abertura e listagem de chamados pela interface.
-- Atribuição de técnicos aos chamados.
-- Atualização dos status.
-- Encerramento de chamados com registro da solução.
-- Ampliação dos testes automatizados.
-- Revisão e integração final do projeto.
+- Desenvolver a interface de interação pelo terminal.
+- Integrar os serviços à interface do sistema.
+- Implementar a listagem e consulta de chamados.
+- Implementar a atribuição de chamados aos técnicos.
+- Implementar a atualização dos status dos chamados.
+- Implementar o encerramento de chamados com registro da solução.
+- Ampliar os testes automatizados.
+- Realizar a revisão geral do sistema.
 
-## 9. Desenvolvimento em equipe
+## 9. Desenvolvimento e controle de versão
 
-O projeto utiliza Git e GitHub para controle de versão e colaboração entre os integrantes.
+O projeto utiliza Git e GitHub para controle de versão e acompanhamento do desenvolvimento.
 
-O desenvolvimento é organizado por meio de branches, permitindo que cada integrante trabalhe em partes específicas do sistema antes da integração à branch principal (`main`).
+As funcionalidades são desenvolvidas em branches específicas, permitindo organizar as alterações e manter a branch principal (`main`) mais estável.
+
+**Repositório:** https://github.com/k4uaxavier/sistema-chamado-ti
 
 ---
 
-**Projeto acadêmico — Sistemas de Informação.**
+**Projeto acadêmico — Sistema de Gerenciamento de Chamados de TI.**
